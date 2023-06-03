@@ -1,0 +1,27 @@
+      .loader {
+          display: none;
+          margin: 20px;
+          text-align: center;
+      }
+
+      .error {
+          display: none;
+          margin: 20px;
+          text-align: center;
+          color: red;
+      }
+
+      .cat-info {
+          display: none;
+          margin: 20px;
+      }
+
+      .cat-info img {
+          width: 200px;
+          height: auto;
+          margin-bottom: 10px;
+      }
+
+      .cat-details {
+          margin-top: 10px;
+      }
