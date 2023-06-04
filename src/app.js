@@ -12,21 +12,32 @@ document.addEventListener('DOMContentLoaded', function () {
   const catImage = document.querySelector('.cat-info img');
 
   function populateBreeds() {
-    fetchBreeds()
-      .then(breeds => {
-        breeds.forEach(breed => {
-          const option = document.createElement('option');
-          option.value = breed.id;
-          option.textContent = breed.name;
-          breedSelect.appendChild(option);
+    showLoader();
+    hideError();
+    hideCatInfo();
+    hideBreedSelect();
+
+    try {
+      fetchBreeds()
+        .then(breeds => {
+          breeds.forEach(breed => {
+            const option = document.createElement('option');
+            option.value = breed.id;
+            option.textContent = breed.name;
+            breedSelect.appendChild(option);
+          });
+          breedSelect.addEventListener('change', handleBreedSelect);
+          hideLoader();
+          showBreedSelect();
+        })
+        .catch(() => {
+          showError('Ooops! Something went wrong! Try reloading the page!');
+          hideLoader();
         });
-        breedSelect.addEventListener('change', handleBreedSelect);
-        loader.style.display = 'none';
-        breedSelect.style.display = 'block';
-      })
-      .catch(() => {
-        showError();
-      });
+    } catch (error) {
+      showError('Ooops! Something went wrong! Try reloading the page!');
+      hideLoader();
+    }
   }
 
   function handleBreedSelect() {
@@ -34,19 +45,24 @@ document.addEventListener('DOMContentLoaded', function () {
     showLoader();
     hideCatInfo();
 
-    fetchCatByBreed(breedId)
-      .then(cat => {
-        breedName.textContent = cat.breed;
-        description.textContent = cat.description;
-        temperament.textContent = cat.temperament;
-        catImage.src = cat.image;
-        showCatInfo();
-        hideLoader();
-      })
-      .catch(() => {
-        showError();
-        hideLoader();
-      });
+    try {
+      fetchCatByBreed(breedId)
+        .then(cat => {
+          breedName.textContent = cat.breed;
+          description.textContent = cat.description;
+          temperament.textContent = cat.temperament;
+          catImage.src = cat.image;
+          showCatInfo();
+          hideLoader();
+        })
+        .catch(() => {
+          showError('Ooops! Something went wrong! Try reloading the page!');
+          hideLoader();
+        });
+    } catch (error) {
+      showError('Ooops! Something went wrong! Try reloading the page!');
+      hideLoader();
+    }
   }
 
   function showLoader() {
@@ -57,12 +73,21 @@ document.addEventListener('DOMContentLoaded', function () {
     loader.style.display = 'none';
   }
 
-  function showError() {
+  function showError(errorMessage) {
     error.style.display = 'block';
+    error.textContent = errorMessage;
   }
 
   function hideError() {
     error.style.display = 'none';
+  }
+
+  function showBreedSelect() {
+    breedSelect.style.display = 'block';
+  }
+
+  function hideBreedSelect() {
+    breedSelect.style.display = 'none';
   }
 
   function showCatInfo() {
